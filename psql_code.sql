@@ -1,40 +1,36 @@
-CREATE TABLE IF NOT EXISTS genre (
-	id serial NOT NULL,
-	title VARCHAR(20) UNIQUE NOT NULL,
-	singer_id INTEGER REFERENCES singer ON DELETE RESTRICT
-	PRIMARY KEY (singer_id));
-
-CREATE TABLE IF NOT EXISTS singer (
-	id serial NOT NULL,
-	name_or_nickname VARCHAR(30) UNIQUE NOT NULL,
-	genre_id INTEGER REFERENCES genre ON DELETE RESTRICT,
-	album_id INTEGER REFERENCES album ON DELETE RESTRICT,
-	track_id INTEGER REFERENCES track ON DELETE RESTRICT,
-	compilation_id INTEGER REFERENCES compilation ON DELETE RESTRICT,
-	PRIMARY KEY (genre_id, album_id, track_id, compilation_id);
-
-CREATE TABLE IF NOT EXISTS track (
-	id serial NOT NULL
-	title VARCHAR(30) NOT NULL,
-	duration INTEGER NOT NULL,
-	singer_id INTEGER REFERENCES singer ON DELETE CASCADE,
-	album_id INTEGER REFERENCES album ON DELETE CASCADE,
-	compilation_id INTEGER REFERENCES compilation ONDELETE CASCADE,
-	PRIMARY KEY (singer_id, album_id, compilation_id);
-
-CREATE TABLE IF NOT EXISTS album (
-	id serial NOT NULL,
-	title VARCHAR(30)NOT NULL,
-	issue_of_year DATE NOT NULL,
-	track_id INTEGER REFERENCES track ON DELETE RESTRICT,
-	singer INTEGER REFERENCES singer ON DELETE RESTRICT,
-	compilation_id INTEGER REFERENCES compilation ON DELETE RESTRICT,
-	PRIMARY KEY(track_id, singer_id, compilation_id);
-
-CREATE TABLE IF NOT EXISTS compilation (
-	id serial NOT NULL,
-	title VARCHAR(30) NOT NULL,
-	PRIMARY KEY (track_id, album_id, singer_id);
-/*
-Сначала был создан "скелет" затем для привязки создавал новые столбцы командой ADD COLUMN
-*/
+create table if not exists singer (
+				id serial primary key,
+				name_or_nickname varchar(30) not null,
+				genre integer not null references genre(id)
+				);/*create*/
+			
+create table if not exists genre (
+				id serial primary key not null,
+				title varchar(30) not null,
+				description text
+				);/*create*/
+			
+				
+create table if not exists track (
+				id serial primary key,
+				singer integer not null references singer(id),
+				title varchar(30) not null,
+				duration integer not null
+				);/*create*/
+			
+create table if not exists album (
+				id serial primary key,
+				title varchar(50) not null,
+				release_date date,
+				track integer not null references track(id),
+				singer integer not null references singer(id)
+				);/*create*/
+				
+				
+create table if not exists compilation_info (
+				id serial primary key,
+				title varchar(50) not null,
+				year_of_issue date,
+				singer integer references singer(id),
+				track integer references track(id)
+				);/*create*/
