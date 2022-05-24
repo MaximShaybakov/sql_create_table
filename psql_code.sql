@@ -34,3 +34,5 @@ create table if not exists compilation_info (
 				singer integer references singer(id),
 				track integer references track(id)
 				);/*create*/
+				
+/*изображение со связями БД 'img_base.jpg' во внешнем каталоге данного репозиторя*/
