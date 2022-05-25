@@ -1,38 +1,35 @@
-create table if not exists singer (
-				id serial primary key,
-				name_or_nickname varchar(30) not null,
-				genre integer not null references genre(id)
-				);/*create*/
-			
-create table if not exists genre (
-				id serial primary key not null,
-				title varchar(30) not null,
-				description text
-				);/*create*/
-			
+create table if not exists genre (id serial primary key,
+					name_or_nickname varchar(50) not null);
+
+create table if not exists genre_singer (genre_id integer references
+					genre(id),
+					singer_id integer references singer(id),
+					constraint gen_sin primary key(genre_id, singer_id));
+					
+create table if not exists singer (id serial primary key,
+					title varchar(30) not null);
+					
+create table if not exists track (id serial primary key,
+					title varchar(50) not null,
+					duration integer,
+					singer_id integer not null references singer(id));
+
+create table if not exists album_track (track_id integer references track(id),
+					album_id integer references album(id),
+					constraint alb_trk primary key(track_id, album_id));
+					
+					
+create table if not exists album (id serial primary key,
+					title varchar(50) not null,
+					release_data date);
 				
-create table if not exists track (
-				id serial primary key,
-				singer integer not null references singer(id),
-				title varchar(30) not null,
-				duration integer not null
-				);/*create*/
-			
-create table if not exists album (
-				id serial primary key,
-				title varchar(50) not null,
-				release_date date,
-				track integer not null references track(id),
-				singer integer not null references singer(id)
-				);/*create*/
-				
-				
-create table if not exists compilation_info (
-				id serial primary key,
-				title varchar(50) not null,
-				year_of_issue date,
-				singer integer references singer(id),
-				track integer references track(id)
-				);/*create*/
+create table if not exists album_compilation(album_id integer references album(id),
+					compilation_id integer references compilation(id),
+					constraint alb_cmpl primary key(album_id, compilation_id));
+					
+create table if not exists compilation (id serial primary key,
+					title varchar(50) not null,
+					issue_of_year date);
+					
 				
 /*изображение со связями БД 'img_base.jpg' во внешнем каталоге данного репозиторя*/
